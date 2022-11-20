@@ -12,8 +12,12 @@ jobs:
     runs-on: debian-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Build the Docker image
-      run: docker build ./frontend/docker --file Dockerfile --tag nftkz-ft:dev
-    - name: Push the Docker image
-      run: docker push localhost:5000/nftkz-ft:dev
+      - uses: actions/checkout@v3
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build the Docker image
+        run: docker build ./frontend/docker --file Dockerfile --tag nftkz-ft:dev
+      - name: Push the Docker image
+        run: docker push localhost:5000/nftkz-ft:dev
+    
