@@ -8,6 +8,17 @@ services:
           - "0.0.0.0:80:80"
         networks:
           - nftkz
+        depends_on:
+          - ipfsb
+        environment:
+            IPFS_HOST: ipfsb
+    ipfsb:
+        image: ipfs
+        container_name: ipfsb
+        hostname: ipfsb
+        restart: always
+        networks:
+          - nftkz
 networks:
     nftkz:
         driver: bridge
