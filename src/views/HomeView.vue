@@ -88,6 +88,7 @@ const getNFTContract = () => {
 const mintNFT = async () => {
   try {
     if (!ethereum) return alert('Get MetaMask!');
+    if (nftToken.value === '') return alert('Enter NFT token');
 
     const addressFrom = store.$state.wallet;
     const nftContract = getNFTContract();
@@ -116,6 +117,7 @@ const mintNFT = async () => {
 const sendTransaction = async () => {
 		try {
 			if (!ethereum) return alert("Please install metamask");
+      if (to.value === '' || amount.value === '') return alert("Please enter to and amount");
 
       const addressTo = to.value;
       const parsedAmount = ethers.utils.parseEther(amount.value);
