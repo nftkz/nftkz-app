@@ -19,6 +19,8 @@ services:
         restart: always
         networks:
           - nftkz
+        ports:
+          - "0.0.0.0:5001:5001"
 networks:
     nftkz:
         driver: bridge
