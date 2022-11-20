@@ -163,7 +163,6 @@ const mintNFT = async () => {
 const sendTransaction = async () => {
 		try {
 			if (!ethereum) return alert("Please install metamask");
-      if (to.value === '' || amount.value === '') return alert("Please enter to and amount");
 
       const addressTo = to.value;
       const parsedAmount = ethers.utils.parseEther(amount.value);

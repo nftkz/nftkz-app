@@ -1,0 +1,16 @@
+version: '2'
+services:
+    frontend:
+        image: nftkz-ft
+        container_name: frontend
+        restart: always
+        ports:
+          - "0.0.0.0:80:80"
+        networks:
+          - nftkz
+networks:
+    nftkz:
+        driver: bridge
+        ipam:
+            config:
+                - subnet: 192.168.88.0/24
