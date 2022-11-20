@@ -1,8 +1,7 @@
 import { create } from 'ipfs-http-client'
-import process from 'process'
 
-const IPFS_HOST = process.env.IPFS_HOST || 'localhost'
-const IPFS_PORT = process.env.IPFS_PORT || '5001'
+const IPFS_HOST = import.meta.env.VITE_IPFS_HOST
+const IPFS_PORT = import.meta.env.VITE_IPFS_PORT || '5001'
 
 const ipfs = create({
   host: IPFS_HOST,
