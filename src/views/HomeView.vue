@@ -31,8 +31,15 @@
             {{ transactionStatus }}
           </div>
           <div class="mt-8">
-            <input placeholder="NFT address (ipfs)" type="text" id="nfttoken" v-model="nftToken" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out mt-4" />
-            <button class="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="mintNFT()">Mint NFT</button>  
+            <!-- <input placeholder="NFT address (ipfs)" type="text" id="nfttoken" v-model="nftToken" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out mt-4" /> -->
+            <input type="file" id="nfttoken" v-on:change="getImageCID" />        
+            <input type="text" placeholder="Name" v-model="nftName" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out mt-4">
+            <textarea type="text" placeholder="Description" v-model="nftDesc" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out mt-4"></textarea>
+            <input type="text" placeholder="Author Name" v-model="nftAuthor" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out mt-4"> 
+            <input type="text" placeholder="Twitter link" v-model="twitterLink" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out mt-4">
+            <!-- generate json -->
+            <button class="w-full mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="generateJSON()">Generate JSON</button>
+            <button class="w-full mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="mintNFT()">Mint NFT</button>  
           </div>
         </div>
       </div>
@@ -41,6 +48,7 @@
 </template>
 
 <script setup>
+import ipfs from "../utils/ipfs";
 import { onMounted, ref } from 'vue';
 import { ethers } from 'ethers';
 import { contractABI, contractAddress, nftAddress, nftABI } from '../utils/constants';
@@ -55,7 +63,46 @@ const transactionStatus = ref('');
 
 const to = ref('');
 const amount = ref('');
+const imageCID = ref('');
 const nftToken = ref('');
+const nftName = ref('');
+const nftDesc = ref('');
+const nftAuthor = ref('');
+const twitterLink = ref('');
+
+const getImageCID = async (e) => {
+  const file = e.target.files[0];
+  try {
+    const added = await ipfs.add(file);
+    imageCID.value = 'ipfs://' + added.path;
+    console.log(imageCID.value);
+  } catch (error) {
+    console.log("Error uploading file: ", error);
+  }
+};
+
+const generateJSON = () => {
+  // save clean json file
+  const json = {
+    "name": nftName.value,
+    "description": nftDesc.value,
+    "image": imageCID.value,
+    "attributes": [
+      {
+        "trait_type": "Author",
+        "value": nftAuthor.value
+      },
+      {
+        "trait_type": "Twitter",
+        "value": twitterLink.value
+      }
+    ]
+  }
+  ipfs.add(JSON.stringify(json)).then((res) => {
+    nftToken.value = res.path;
+    console.log(res.path);
+  });
+}
 
 const connectWallet = () => {
   if (!ethereum) {
@@ -88,7 +135,6 @@ const getNFTContract = () => {
 const mintNFT = async () => {
   try {
     if (!ethereum) return alert('Get MetaMask!');
-    if (nftToken.value === '') return alert('Enter NFT token');
 
     const addressFrom = store.$state.wallet;
     const nftContract = getNFTContract();
