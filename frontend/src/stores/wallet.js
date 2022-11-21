@@ -10,6 +10,12 @@ export const useWalletStore = defineStore({
   }),
   getters: {
     getWallet: (state) => state.wallet,
+    getShortWallet: (state) => {
+      if (state.wallet) {
+        return `${state.wallet.slice(0, 6)}...${state.wallet.slice(-4)}`
+      }
+      return null
+    },
     isConnected: (state) => state.connected,
     isLoading: (state) => state.loading,
     getError: (state) => state.error,
