@@ -1,5 +1,5 @@
 <template>
-  <main>
+  <main class="mb-auto">
     <div>
       <div class="flex flex-col items-center justify-center">
         <div class="w-full max-w-xs">

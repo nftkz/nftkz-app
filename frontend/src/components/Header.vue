@@ -11,8 +11,8 @@
             </router-link>
           </div>
         </div>
-        <div class="hidden md:flex items-center">
-          <div v-if="store.$state.status == 'connected'" class="text-xl text-orange-600">
+        <div class="flex items-center">
+          <div v-if="store.$state.status == 'connected'" class="text-lg text-orange-600">
             Account {{ store.getShortWallet }}
           </div>
           <div v-if="store.$state.status == 'not connected'">
