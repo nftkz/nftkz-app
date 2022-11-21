@@ -2,19 +2,6 @@
   <main>
     <div>
       <div class="flex flex-col items-center justify-center">
-        <h1 class="text-8xl mb-7 font-black">NFTKZ</h1>
-        <div class="text-xl text-gray-600">
-          Account {{ store.getShortWallet }}
-        </div>
-        <div v-if="store.$state.status == 'connected'">
-          Successfully connected to Metamask
-        </div>
-        <div v-if="store.$state.status == 'not connected'">
-          <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="connectWallet()">Connect to MetaMask</button>
-        </div>
-        <div v-if="store.$state.error">
-          {{ store.$state.error }}
-        </div>
         <div class="w-full max-w-xs">
           <div class="mt-8">
             <div>
@@ -43,7 +30,7 @@
 
 <script setup>
 import ipfs from "../utils/ipfs";
-import { onMounted, ref } from 'vue';
+import { ref } from 'vue';
 import { ethers } from 'ethers';
 import { nftAddress, nftABI } from '../utils/constants';
 
@@ -96,18 +83,6 @@ const generateJSON = () => {
     nftToken.value = res.path;
   });
 }
-
-const connectWallet = () => {
-  if (!ethereum) {
-    alert('Get MetaMask!');
-  } else {
-    store.connectWallet(ethereum);
-  }
-};
-
-onMounted(() => {
-  store.checkIfWalletIsConnected();
-});
 
 const getNFTContract = () => {
   const provider = new ethers.providers.Web3Provider(ethereum);
