@@ -16,7 +16,7 @@ export const useWalletStore = defineStore({
       }
       return null
     },
-    isConnected: (state) => state.connected,
+    getStatus: (state) => state.status,
     isLoading: (state) => state.loading,
     getError: (state) => state.error,
   },

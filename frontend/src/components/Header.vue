@@ -12,14 +12,14 @@
           </div>
         </div>
         <div class="flex items-center">
-          <div v-if="store.$state.status == 'connected'" class="text-lg text-orange-600">
+          <div v-if="store.getStatus == 'connected'" class="text-lg text-orange-600">
             Account {{ store.getShortWallet }}
           </div>
-          <div v-if="store.$state.status == 'not connected'">
+          <div v-if="store.getStatus == 'not connected'">
             <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="connectWallet()">Connect to MetaMask</button>
           </div>
-          <div v-if="store.$state.error">
-            {{ store.$state.error }}
+          <div v-if="store.getError">
+            {{ store.getError }}
           </div>
         </div>
       </div>
