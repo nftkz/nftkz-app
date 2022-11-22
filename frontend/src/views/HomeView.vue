@@ -70,26 +70,28 @@ const getImageCID = async (file) => {
   }
 };
 
-const generateJSON = () => {
-  // save clean json file
-  const json = {
-    "name": nft.value.title,
-    "description": nft.value.description,
-    "image": nft.value.imageCID,
-    "attributes": [
-      {
-        "trait_type": "Author",
-        "value": nft.value.author
-      },
-      {
-        "trait_type": "Twitter",
-        "value": nft.value.twitter
-      }
-    ]
-  };
-  ipfs.add(JSON.stringify(json)).then((res) => {
-    nft.value.token = res.path;
-  });
+const generateJSON = async () => {
+  try {
+    const json = {
+      "name": nft.value.title,
+      "description": nft.value.description,
+      "image": nft.value.imageCID,
+      "attributes": [
+        {
+          "trait_type": "Author",
+          "value": nft.value.author
+        },
+        {
+          "trait_type": "Twitter",
+          "value": nft.value.twitter
+        }
+      ]
+    };
+    const added = await ipfs.add(JSON.stringify(json));
+    nft.value.token = added.path;
+  } catch (error) {
+    console.log("Error generating JSON: ", error);
+  }
 }
 
 const getNFTContract = () => {
@@ -106,7 +108,7 @@ const mintNFT = async () => {
     if (nft.value.title === '' || nft.value.description === '' || nft.value.author === '' || nft.value.twitter === '') {
       return alert('Please fill all fields');
     }
-    generateJSON();
+    await generateJSON();
     const addressFrom = store.$state.wallet;
     const nftContract = getNFTContract();
     const tokenURI = 'ipfs://' + nft.value.token;
